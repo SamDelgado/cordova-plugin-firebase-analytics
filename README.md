@@ -1,18 +1,35 @@
-# cordova-plugin-firebase-analytics<br>[![NPM version][npm-version]][npm-url] [![NPM downloads][npm-downloads]][npm-url]
+# cordova-plugin-firebase-analytics
 > Cordova plugin for [Firebase Analytics](https://firebase.google.com/docs/analytics/)
 
 ## Installation
 
-    cordova plugin add cordova-plugin-firebase-analytics --save
+    cordova plugin add https://github.com/SamDelgado/cordova-plugin-firebase-analytics --save
 
-Go yo firebase console and export `google-services.json` and `GoogleService-Info.plist`. Put those files into the root of your cordova app folder.
+Go to your firebase console and export `google-services.json` and `GoogleService-Info.plist`. Put those files into the root of your cordova app folder.
 
 NOTE: on iOS in order to collect demographic, age, gender data etc. you should additionally [include `AdSupport.framework`](https://firebase.google.com/support/guides/analytics-adsupport) into your project.
+
+## Requirements
+
+- cordova >= 6.4.0
+- cordova-ios >= 4.3.0
 
 ## Supported Platforms
 
 - iOS
 - Android
+
+## IOS Quirks
+
+if you want to open the project with xcode you should use XCWorkspace file not xcodeproj file or you will run with some not found issues.
+
+## IOS common issues
+
+if you run with "duplication" issues after using this plugin that's mean there's another plugin using same dependencies of this plugin but without using cocoapods so you should call the author of that plugin to start using cocoapods or update that plugin to version that using cocoapods.
+
+## Android common issues
+
+if you run with "Multi dex" issues after using this plugin that's mean there's another plugin using old version of google services, and in gradle that's not allowed so you should use same version via downgrade google services of this plugin or upgrade the google services of that plugin, you have to decide what is the right choice.
 
 ## Methods
 
@@ -50,7 +67,3 @@ Sets the current screen name, which specifies the current visual context in your
 ```js
 window.cordova.plugins.firebase.analytics.setCurrentScreen("User profile");
 ```
-
-[npm-url]: https://www.npmjs.com/package/cordova-plugin-firebase-analytics
-[npm-version]: https://img.shields.io/npm/v/cordova-plugin-firebase-analytics.svg
-[npm-downloads]: https://img.shields.io/npm/dt/cordova-plugin-firebase-analytics.svg
