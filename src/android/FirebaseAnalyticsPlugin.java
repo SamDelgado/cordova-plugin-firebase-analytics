@@ -19,15 +19,17 @@ import java.util.Iterator;
 public class FirebaseAnalyticsPlugin extends CordovaPlugin {
     private static final String TAG = "FirebaseAnalyticsPlugin";
 
-    private FirebaseAnalytics firebaseAnalytics;
+	private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void pluginInitialize() {
-        Log.d(TAG, "Starting Firebase Analytics plugin");
-
-        Context context = this.cordova.getActivity().getApplicationContext();
-
-        this.firebaseAnalytics = FirebaseAnalytics.getInstance(context);
+        final Context context = this.cordova.getActivity().getApplicationContext();
+        this.cordova.getThreadPool().execute(new Runnable() {
+            public void run() {
+                Log.d(TAG, "Starting Firebase Analytics plugin");
+                mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
+            }
+        });
     }
 
     @Override
@@ -57,48 +59,81 @@ public class FirebaseAnalyticsPlugin extends CordovaPlugin {
         return false;
     }
 
-    private void logEvent(CallbackContext callbackContext, String name, JSONObject params) throws JSONException {
-        Bundle bundle = new Bundle();
+    private void logEvent(final CallbackContext callbackContext, final String name, final JSONObject params) throws JSONException {
+        final Bundle bundle = new Bundle();
         Iterator iter = params.keys();
-
-        while (iter.hasNext()) {
-            String key = (String) iter.next();
+        while(iter.hasNext()){
+            String key = (String)iter.next();
             Object value = params.get(key);
 
             if (value instanceof Integer || value instanceof Double) {
-                bundle.putFloat(key, ((Number) value).floatValue());
+                bundle.putFloat(key, ((Number)value).floatValue());
             } else {
                 bundle.putString(key, value.toString());
             }
         }
 
-        this.firebaseAnalytics.logEvent(name, bundle);
-
-        callbackContext.success();
+        cordova.getThreadPool().execute(new Runnable() {
+            public void run() {
+                try {
+                    mFirebaseAnalytics.logEvent(name, bundle);
+                    callbackContext.success();
+                } catch (Exception e) {
+                    callbackContext.error(e.getMessage());
+                }
+            }
+        });
     }
 
-    private void setUserId(CallbackContext callbackContext, String userId) {
-        this.firebaseAnalytics.setUserId(userId);
-
-        callbackContext.success();
+    private void setUserId(final CallbackContext callbackContext, final String id) {
+        cordova.getThreadPool().execute(new Runnable() {
+            public void run() {
+                try {
+                    mFirebaseAnalytics.setUserId(id);
+                    callbackContext.success();
+                } catch (Exception e) {
+                    callbackContext.error(e.getMessage());
+                }
+            }
+        });
     }
 
-    private void setUserProperty(CallbackContext callbackContext, String name, String value) {
-        this.firebaseAnalytics.setUserProperty(name, value);
-
-        callbackContext.success();
+    private void setUserProperty(final CallbackContext callbackContext, final String name, final String value) {
+        cordova.getThreadPool().execute(new Runnable() {
+            public void run() {
+                try {
+                    mFirebaseAnalytics.setUserProperty(name, value);
+                    callbackContext.success();
+                } catch (Exception e) {
+                    callbackContext.error(e.getMessage());
+                }
+            }
+        });
     }
 
-    private void setEnabled(CallbackContext callbackContext, String enabled) {
-        this.firebaseAnalytics.setAnalyticsCollectionEnabled(enabled == "true");
-
-        callbackContext.success();
+    private void setEnabled(final CallbackContext callbackContext,final String enabled) {
+        cordova.getThreadPool().execute(new Runnable() {
+			public void run() {
+				try {
+					mFirebaseAnalytics.setAnalyticsCollectionEnabled(enabled == "true");
+					callbackContext.success();
+				} catch (Exception e) {
+					callbackContext.error(e.getMessage());
+				}
+			}
+		});
     }
 
-    private void setCurrentScreen(CallbackContext callbackContext, String name) {
-        this.firebaseAnalytics.setCurrentScreen(
-            this.cordova.getActivity(), name, null);
-
-        callbackContext.success();
+    private void setCurrentScreen(final CallbackContext callbackContext,final String name) {        
+        cordova.getThreadPool().execute(new Runnable() {
+			public void run() {
+				try {
+					mFirebaseAnalytics.setCurrentScreen(cordova.getActivity(), name, null);
+					callbackContext.success();
+				} catch (Exception e) {
+					callbackContext.error(e.getMessage());
+				}
+			}
+		});
     }
 }
