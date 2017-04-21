@@ -38,7 +38,7 @@ xmlns:android="http://schemas.android.com/apk/res/android"
 
         <framework src="AdSupport.framework" />
         <framework src="Firebase/Analytics" type="podspec" spec="~> 3.15.0" />
-        <hook src="scripts/after_prepare.js" type="after_prepare" />
+        <hook type="after_prepare" src="src/ios/copy-google-services.js" />
     </platform>
 
     <platform name="android">
@@ -59,7 +59,7 @@ xmlns:android="http://schemas.android.com/apk/res/android"
         <source-file src="src/android/google-services.json" target-dir="." />
         <source-file src="src/android/FirebaseAnalyticsPlugin.java"
             target-dir="src/by/chemerisuk/cordova/firebase/" />
-        <hook src="scripts/after_prepare.js" type="after_prepare" />
+        <hook type="after_prepare" src="src/android/copy-google-services.js" />
     </platform>
 
 </plugin>
