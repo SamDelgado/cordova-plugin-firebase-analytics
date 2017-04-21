@@ -21,6 +21,10 @@ xmlns:android="http://schemas.android.com/apk/res/android"
     </engines>
 
     <platform name="ios">
+        <config-file parent="FirebaseAppDelegateProxyEnabled" target="*-Info.plist">
++            <true />
++        </config-file>
+               
         <config-file target="config.xml" parent="/*">
             <feature name="FirebaseAnalytics">
                 <param name="ios-package" value="FirebaseAnalyticsPlugin" />
@@ -48,7 +52,8 @@ xmlns:android="http://schemas.android.com/apk/res/android"
         <config-file target="AndroidManifest.xml" parent="/*">
             <uses-permission android:name="android.permission.INTERNET" />
         </config-file>
-
+        
+        <framework src="src/android/build.gradle" custom="true" type="gradleReference" />
         <framework src="com.google.firebase:firebase-core:10+" />
 
         <source-file src="src/android/google-services.json" target-dir="." />
